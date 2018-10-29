@@ -41,7 +41,8 @@ void write_ind(std::ofstream& file, const std::vector<std::string> inds)
 
 
 
-// Convert genotypes from a VCF format into an EIGENSTRAT format.
+// Convert genotypes from a VCF format into an EIGENSTRAT format by applying
+// a series of regex substitutions on each line as a whole.
 std::string convert_genotypes(const std::string& s)
 {
     std::string converted(s);
@@ -88,8 +89,8 @@ void write_geno(std::ofstream& file, const std::string& line)
 
 
 
-//' Convert VCF file into an EIGENSTRAT format
-void vcf_to_eigenstrat(const char* vcf, const char* eigenstrat) {
+// Convert VCF file into an EIGENSTRAT format
+int vcf_to_eigenstrat(const char* vcf, const char* eigenstrat) {
     std::ofstream ind_file(std::string(eigenstrat) + ".ind"),
                   snp_file(std::string(eigenstrat) + ".snp"),
                   geno_file(std::string(eigenstrat) + ".geno");
@@ -98,7 +99,7 @@ void vcf_to_eigenstrat(const char* vcf, const char* eigenstrat) {
 
     if (!std::ifstream(vcf)) {
         std::cout << "File '" << vcf << "' not found.\n";
-        return;
+        return 1;
     }
 
     // setup boost machinery that will be used for reading gzipped input
@@ -130,16 +131,18 @@ void vcf_to_eigenstrat(const char* vcf, const char* eigenstrat) {
         }
     }
 
-    long n(0), passed(0);
+    long n_total(0), n_biallelic(0);
     // parse the genotype part of the VCF
     while (std::getline(*vcf_file, line)) {
+        n_total++;
+
         auto elems = split_line(line);
 
         // keep only biallelic SNPs
         if (elems[3].length() != 1 || elems[4].length() != 1 || elems[4] == ".")
             continue;
         else
-            passed++;
+            n_biallelic++;
 
         // write snp and geno records
         if (line.find("#") != 0) {
@@ -148,8 +151,10 @@ void vcf_to_eigenstrat(const char* vcf, const char* eigenstrat) {
         }
     }
 
-    std::cout << "Total number of variants processed: " << n << "\n";
-    std::cout << "Number of bi-allelic variants saved to EIGENSTRAT: " << passed << "\n";
+    std::cout << "Total number of variants processed: " << n_total << "\n";
+    std::cout << "Number of bi-allelic variants saved to EIGENSTRAT: " << n_biallelic << "\n";
+
+    return 0;
 }
 
 
@@ -161,6 +166,5 @@ int main(int argc, char* argv[])
         return 0;
     }
 
-    vcf_to_eigenstrat(argv[1], argv[2]);
-    return 0;
+    return vcf_to_eigenstrat(argv[1], argv[2]);
 }
