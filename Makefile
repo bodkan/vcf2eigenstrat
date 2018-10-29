@@ -8,7 +8,7 @@ source := src/vcf2eigenstrat.cpp
 all: $(dir) $(binary) tests
 
 $(binary): $(dir) $(source)
-	g++ -std=c++14 -Wall -I /usr/local/Cellar/boost/1.67.0_1/include -L /usr/local/Cellar/boost/1.67.0_1/lib -lboost_iostreams $(source) -o $@
+	g++ -std=c++14 -Wall -I /usr/include/boost -L /usr/lib/x86_64-linux-gnu $(source) -lboost_iostreams -o $@
 
 tests:
 	@./$(binary) tests/test_vcf.vcf tmp/test_eigenstrat 
