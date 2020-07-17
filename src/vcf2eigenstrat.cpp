@@ -23,12 +23,12 @@ std::vector<std::string> split_line(std::string& line)
 // Write a single row of a snp file.
 void write_snp(std::ofstream& file, const std::vector<std::string>& tokens)
 {
-    file << tokens[0] << "_" << tokens[1] << "\t" << // ID
-            tokens[0] << "\t" << // chromosome
-            "0.0"     << "\t" << // genetic distance
-            tokens[1] << "\t" << // position
-            tokens[3] << "\t" << // 
-            tokens[4] << "\n";
+    file << tokens[0] << "_" << tokens[1] << "_" << tokens[3] << "_" << tokens[4] << "\t" << // ID
+        tokens[0] << "\t" << // chromosome
+        "0.0"     << "\t" << // genetic distance
+        tokens[1] << "\t" << // position
+        tokens[3] << "\t" << // REF allele
+        tokens[4] << "\n"; // ALT allele
 }
 
 
