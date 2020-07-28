@@ -1,38 +1,14 @@
 # vcf2eigenstrat
-Simple C++ command-line program for VCF -> EIGENSTRAT conversion.
 
-## Installation
+This repo used to contain a simple C++ command-line program for VCF ->
+EIGENSTRAT conversion. However, the code was not actively maintained
+and, in fact, has never been used in production as I found an easier
+solution for doing the conversion. In order to avoid issues with
+undiscovered bugs, I have decided to retire the repository. The main
+purpose of the program was to test some new features in the latest C++
+standard and it served its purpose. If you're interested, the original
+code is still available in the git history.
 
-### macOS
-
-The program depends on boost libraries. Assuming you use [homebrew](https://brew.sh)
-for installing unix programs that are not available for macOS by default, you can simply
-run `brew install boost`.
-
-Fetch the sources from Github:
-
-```
-git clone https://github.com/bodkan/vcf2eigenstrat
-cd vcf2eigenstrat
-```
-
-Run the compilation:
-
-```
-make
-```
-
-This will create a binary `vcf2eigenstrat` in a `bin/` subdirectory and run a small test suite.
-
-### Other Unix systems
-
-Same procedure as described for macOS above, but installing boost will differ depending
-on your system.
-
-### Usage
-
-```
-$ ./bin/vcf2eigenstrat 
-Usage:
-	./vcf_to_eigenstrat <path to VCF> <output EIGENSTRAT prefix>
-```
+A shell script with a sketch of a simpler alternative using bcftools,
+shell utilities and Perl can be found in `conversion.sh`. This is the
+solution I've been using for the past couple of years.
