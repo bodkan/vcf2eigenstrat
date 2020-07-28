@@ -1,11 +1,19 @@
-vcf=asd.vcf.gz
+#!/usr/bin/env bash
+
+vcf=subset_VCF_for_conversion_snp_DP.vcf
+
+##########################################################
+# first convert VCF to a tab-separated table of genotypes
+##########################################################
 
 # write a header line of the genotype table, including sample names
 printf "#chrom\tpos\tref\talt\t" > gt.tsv
 bcftools query -l $vcf | tr '\n' '\t' | sed 's/\t$/\n/' >> gt.tsv
 
 # convert the full VCF file into a simple tab-separated table of GTs
-bcftools query -f "%CHROM\t%POS\t%REF\t%ALT[\t%GT]\n" $vcf \
+# after first subsetting to only biallelic SNPs
+bcftools view -m2 -M2 -v snps $vcf \
+         | bcftools query -f "%CHROM\t%POS\t%REF\t%ALT[\t%GT]\n" $vcf \
          >> gt.tsv
 
 # compress and index the table
@@ -20,11 +28,15 @@ zcat gt.tsv.gz \
 tabix -s1 -b2 -e2 gt_nodmg.tsv.gz
 
 
+##########################################################
+# convert the table of genotypes into EIGENSTRAT
+# (just one table, transversions-only table can be
+# converted in the same way)
+##########################################################
+
 # convert a table of genotypes into EIGENSTRAT
 
 # geno file
-# you might have to add additional regexes in case you need to also
-# convert diploid genotypes (0/0 -> 2, 0/1 -> 1, etc...)
 zcat gt.tsv.gz \
     | cut -f5- \
     | tail -n+2 \
