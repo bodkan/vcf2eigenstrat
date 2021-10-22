@@ -46,7 +46,7 @@ zcat gt.tsv.gz \
 # snp file
 zcat gt.tsv.gz \
     | tail -n+2 \
-    | perl -lane '$F[0] =~ s/chr//; print "$F[0]_$F[1]" . "\t" . $F[0] . "\t0\t" . $F[1] . "0\t" . $F[2] . "\t" . $F[3]' \
+    | perl -lane '$F[0] =~ s/chr//; print "$F[0]_$F[1]" . "\t" . $F[0] . "\t0\t" . $F[1] . "\t0\t" . $F[2] . "\t" . $F[3]' \
            > eigenstrat.snp
 
 # ind file
